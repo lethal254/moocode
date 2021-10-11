@@ -1,8 +1,12 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import styled from "styled-components"
-import AppContext from "../appcontext"
+import AppContext from "../contexts/appcontext"
 import CloseIcon from "@material-ui/icons/Close"
 import Button from "../components/Button"
+import axios from "axios"
+import { NEXT_URL } from "../config"
+
+// Styled components styles
 
 const Container = styled.div`
   background-color: #121212b2;
@@ -60,6 +64,19 @@ const Input = styled.input`
 
 const AuthPopup = () => {
   const [showPopup, setShowPopup] = useContext(AppContext)
+
+  // Login states
+  const [loginEmail, setLoginEmail] = useState("")
+  const [loginPassword, setLoginPassword] = useState("")
+  const handleLoginFormSubmit = async (e) => {
+    e.preventDefault()
+    const response = await axios.post(`${NEXT_URL}/api/login`, {
+      email: loginEmail,
+      password: loginPassword,
+    })
+  }
+  // Signup states
+
   return (
     <Container>
       {showPopup.authType === "login" ? (
@@ -73,9 +90,21 @@ const AuthPopup = () => {
               }}
             />
           </TitleContainer>
-          <Form>
-            <Input placeholder='Email' type='text' />
-            <Input placeholder='Password' type='password' />
+          <Form onSubmit={handleLoginFormSubmit}>
+            <Input
+              placeholder='Email'
+              type='text'
+              onChange={(e) => {
+                setLoginEmail(e.target.value)
+              }}
+            />
+            <Input
+              placeholder='Password'
+              type='password'
+              onChange={(e) => {
+                setLoginPassword(e.target.value)
+              }}
+            />
             <Button>Login</Button>
           </Form>
         </AuthContainer>

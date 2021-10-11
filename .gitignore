@@ -3,4 +3,4 @@ api/node_modules
 frontend/node_modules
 
 #Environment variables
-api/.env
+.env-*

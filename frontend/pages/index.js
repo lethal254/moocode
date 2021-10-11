@@ -3,8 +3,12 @@ import LandingPageContainer from "../components/LandingPageContainer"
 import Image from "next/image"
 import Button from "../components/Button"
 import AuthPopup from "../components/AuthPopup"
-import { useContext, useState } from "react"
-import AppContext from "../appcontext"
+import { useContext, useEffect, useState } from "react"
+import AppContext from "../contexts/appcontext"
+import AuthContext from "../contexts/authcontext"
+import { API_URL } from "../config"
+import axios from "axios"
+import Router from "next/router"
 
 const Hero = styled.section`
   width: 100%;
@@ -36,11 +40,19 @@ const Right = styled.div`
   justify-content: center;
 `
 
-const index = () => {
-  const [showPopup] = useContext(AppContext)
+const index = ({ authToken }) => {
+  const [appData, setAppData] = useContext(AppContext)
+
+  useEffect(() => {
+    if (authToken) {
+      Router.push("/posts")
+      setAppData({ ...appData, authToken })
+    }
+  }, [authToken])
+
   return (
-    <LandingPageContainer showPopup={showPopup}>
-      {showPopup.popup ? <AuthPopup /> : ""}
+    <LandingPageContainer appData={appData}>
+      {appData.popup ? <AuthPopup /> : ""}
       <Hero>
         <Left>
           <Title>Motivate yourself to code everyday</Title>
@@ -58,3 +70,13 @@ const index = () => {
 }
 
 export default index
+
+export async function getServerSideProps({ req }) {
+  const token = req.headers.cookie?.split("=")[1]
+
+  return {
+    props: {
+      authToken: token || "",
+    },
+  }
+}

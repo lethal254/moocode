@@ -1,6 +1,9 @@
-import { useContext } from "react"
+import axios from "axios"
+import Router from "next/router"
+import { useContext, useEffect } from "react"
 import styled from "styled-components"
-import AppContext from "../appcontext"
+import { NEXT_URL } from "../config"
+import AppContext from "../contexts/appcontext"
 import Button from "./Button"
 
 const Container = styled.div`
@@ -40,7 +43,18 @@ const Link = styled.a`
 `
 
 const Header = () => {
-  const [showPopup, setShowPopup] = useContext(AppContext)
+  const [appData, setAppData] = useContext(AppContext)
+
+  const handleLogout = async () => {
+    await axios.post(`${NEXT_URL}/api/logout`)
+    setAppData({ ...appData, authToken: "" })
+  }
+
+  useEffect(() => {
+    if (!appData.authToken) {
+      Router.push("/")
+    }
+  })
 
   return (
     <Container>
@@ -48,19 +62,25 @@ const Header = () => {
         <Link href='/'>Moocode.</Link>
       </Left>
       <Right>
-        <Link
-          nav
-          onClick={() => {
-            setShowPopup({ popup: !showPopup.popup, authType: "login" })
-          }}>
-          Login
-        </Link>
-        <Button
-          onClick={() => {
-            setShowPopup({ popup: !showPopup.popup, authType: "signup" })
-          }}>
-          Signup
-        </Button>
+        {appData.authToken ? (
+          <Button onClick={handleLogout}>Logout</Button>
+        ) : (
+          <>
+            <Link
+              nav
+              onClick={() => {
+                setAppData({ popup: !appData.popup, authType: "login" })
+              }}>
+              Login
+            </Link>
+            <Button
+              onClick={() => {
+                setAppData({ popup: !appData.popup, authType: "signup" })
+              }}>
+              Signup
+            </Button>
+          </>
+        )}
       </Right>
     </Container>
   )

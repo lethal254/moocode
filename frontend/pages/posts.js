@@ -1,15 +1,19 @@
+import Router from "next/router"
 import { useContext, useEffect } from "react"
 import LandingPageContainer from "../components/LandingPageContainer"
 import AppContext from "../contexts/appcontext"
 
 const Posts = ({ authToken }) => {
-  const [showPopup, setShowPopup] = useContext(AppContext)
   useEffect(() => {
-    if (authToken) {
-      setShowPopup({ ...showPopup, authToken })
+    if (!authToken) {
+      Router.push("/")
     }
-  }, [authToken])
-  return <LandingPageContainer>I am the posts page</LandingPageContainer>
+  })
+  if (authToken) {
+    return <LandingPageContainer>I am the posts page</LandingPageContainer>
+  } else {
+    return ""
+  }
 }
 
 export default Posts

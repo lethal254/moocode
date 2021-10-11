@@ -48,13 +48,14 @@ const Header = () => {
   const handleLogout = async () => {
     await axios.post(`${NEXT_URL}/api/logout`)
     setAppData({ ...appData, authToken: "" })
+    Router.push("/")
   }
 
   useEffect(() => {
     if (!appData.authToken) {
       Router.push("/")
     }
-  })
+  }, [])
 
   return (
     <Container>

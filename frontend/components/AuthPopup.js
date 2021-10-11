@@ -5,6 +5,7 @@ import CloseIcon from "@material-ui/icons/Close"
 import Button from "../components/Button"
 import axios from "axios"
 import { NEXT_URL } from "../config"
+import Router from "next/router"
 
 // Styled components styles
 
@@ -68,12 +69,15 @@ const AuthPopup = () => {
   // Login states
   const [loginEmail, setLoginEmail] = useState("")
   const [loginPassword, setLoginPassword] = useState("")
+
   const handleLoginFormSubmit = async (e) => {
     e.preventDefault()
     const response = await axios.post(`${NEXT_URL}/api/login`, {
       email: loginEmail,
       password: loginPassword,
     })
+
+    Router.push("/posts")
   }
   // Signup states
 

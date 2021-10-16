@@ -6,7 +6,6 @@ const login = async (req, res) => {
   // Checking the request type i.e should be a POST  and then make our api call to the backend
   if (req.method === "POST") {
     const { email, password } = req.body
-    console.log(email, password)
     const config = {
       headers: {
         "Content-Type": "application/json",

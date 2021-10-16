@@ -5,9 +5,7 @@ import Button from "../components/Button"
 import AuthPopup from "../components/AuthPopup"
 import { useContext, useEffect, useState } from "react"
 import AppContext from "../contexts/appcontext"
-import AuthContext from "../contexts/authcontext"
-import { API_URL } from "../config"
-import axios from "axios"
+
 import Router from "next/router"
 
 const Hero = styled.section`

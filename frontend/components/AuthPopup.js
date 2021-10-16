@@ -71,15 +71,42 @@ const AuthPopup = () => {
   const [loginPassword, setLoginPassword] = useState("")
 
   const handleLoginFormSubmit = async (e) => {
-    e.preventDefault()
-    const response = await axios.post(`${NEXT_URL}/api/login`, {
-      email: loginEmail,
-      password: loginPassword,
-    })
+    try {
+      e.preventDefault()
+      const response = await axios.post(`${NEXT_URL}/api/login`, {
+        email: loginEmail,
+        password: loginPassword,
+      })
 
-    Router.push("/posts")
+      Router.push("/posts")
+    } catch (error) {
+      console.log(error)
+    }
   }
   // Signup states
+  const [signupEmail, setSignupEmail] = useState("")
+  const [signupPassword, setSignupPassword] = useState("")
+  const [fullName, setFullName] = useState("")
+  const [username, setUsername] = useState("")
+
+  const handleSignupFormSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await axios.post(`${NEXT_URL}/api/signup`, {
+        email: signupEmail,
+        password: signupPassword,
+        fullName,
+        username,
+      })
+      setShowPopup({ ...showPopup, authType: "login" })
+      setSignupEmail("")
+      setSignupPassword("")
+      setFullName("")
+      setUsername("")
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <Container>
@@ -97,7 +124,8 @@ const AuthPopup = () => {
           <Form onSubmit={handleLoginFormSubmit}>
             <Input
               placeholder='Email'
-              type='text'
+              type='email'
+              value={loginEmail}
               onChange={(e) => {
                 setLoginEmail(e.target.value)
               }}
@@ -105,6 +133,7 @@ const AuthPopup = () => {
             <Input
               placeholder='Password'
               type='password'
+              value={loginPassword}
               onChange={(e) => {
                 setLoginPassword(e.target.value)
               }}
@@ -123,11 +152,39 @@ const AuthPopup = () => {
               }}
             />
           </TitleContainer>
-          <Form>
-            <Input placeholder='Email' type='text' />
-            <Input placeholder='Full Name' type='text' />
-            <Input placeholder='Username' type='text' />
-            <Input placeholder='Password' type='password' />
+          <Form onSubmit={handleSignupFormSubmit}>
+            <Input
+              placeholder='Email'
+              type='email'
+              value={signupEmail}
+              onChange={(e) => {
+                setSignupEmail(e.target.value)
+              }}
+            />
+            <Input
+              placeholder='Full Name'
+              type='text'
+              value={fullName}
+              onChange={(e) => {
+                setFullName(e.target.value)
+              }}
+            />
+            <Input
+              placeholder='Username'
+              type='text'
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value)
+              }}
+            />
+            <Input
+              placeholder='Password'
+              type='password'
+              value={signupPassword}
+              onChange={(e) => {
+                setSignupPassword(e.target.value)
+              }}
+            />
             <Button>Login</Button>
           </Form>
         </AuthContainer>
